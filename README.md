@@ -1,1 +1,1 @@
-# geekbdb
+# Database education project
