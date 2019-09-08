@@ -1,0 +1,1 @@
+nysqldump --user=root -p mysql help_keyword --opt --where='1 limit 100' > help_keyword.sql
