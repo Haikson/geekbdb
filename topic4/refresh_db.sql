@@ -38,6 +38,7 @@ DROP TABLE `media_likes`, `user_likes`, `message_likes`;
 
 # Change table likes
 ALTER TABLE likes DROP COLUMN `content_type`;
+ALTER TABLE likes ADD COLUMN target_type_id INT UNSIGNED NOT NULL;
 
 CREATE TABLE likes (
   id INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
