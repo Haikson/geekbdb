@@ -378,29 +378,6 @@ INSERT INTO `regions` VALUES (1,'Tinafurt',NULL,0,6,'2014-03-15 09:12:02','2006-
 UNLOCK TABLES;
 
 --
--- Table structure for table `storehouses_products`
---
-
-DROP TABLE IF EXISTS `storehouses_products`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `storehouses_products` (
-  `id` int(10) unsigned NOT NULL AUTO_INCREMENT,
-  `value` int(11) NOT NULL DEFAULT '0',
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `storehouses_products`
---
-
-LOCK TABLES `storehouses_products` WRITE;
-/*!40000 ALTER TABLE `storehouses_products` DISABLE KEYS */;
-/*!40000 ALTER TABLE `storehouses_products` ENABLE KEYS */;
-UNLOCK TABLES;
-
---
 -- Table structure for table `target_types`
 --
 
@@ -425,20 +402,6 @@ LOCK TABLES `target_types` WRITE;
 INSERT INTO `target_types` VALUES (1,'users','1994-10-12 15:06:43'),(2,'message','1985-05-10 14:07:24'),(3,'media','1975-10-30 09:40:16'),(4,'post','2019-09-28 20:48:21');
 /*!40000 ALTER TABLE `target_types` ENABLE KEYS */;
 UNLOCK TABLES;
-
---
--- Temporary table structure for view `username`
---
-
-DROP TABLE IF EXISTS `username`;
-/*!50001 DROP VIEW IF EXISTS `username`*/;
-SET @saved_cs_client     = @@character_set_client;
-SET character_set_client = utf8;
-/*!50001 CREATE TABLE `username` (
-  `id` tinyint NOT NULL,
-  `CONCAT(first_name, ' ', last_name)` tinyint NOT NULL
-) ENGINE=MyISAM */;
-SET character_set_client = @saved_cs_client;
 
 --
 -- Table structure for table `users`
