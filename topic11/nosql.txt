@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 В базе данных Redis подберите коллекцию для подсчета посещений с определенных IP-адресов.
 
 Если нам необходимо считать количество посещений с ip адреса, то ключом может служить ip address,
@@ -39,3 +40,46 @@ product = ({"name": "Product1", "price": 25, 'category': new DBRef('categories',
 db.products.insert(product)
 
 
+=======
+В базе данных Redis подберите коллекцию для подсчета посещений с определенных IP-адресов.
+
+Если нам необходимо считать количество посещений с ip адреса, то ключом может служить ip address,
+а значения - дата/время посещения (это может быть удобно, если необходимо получить информацию о том,
+	когда с конкретного IP производились заходы
+или в виде значения можно хранить единственное число, которое инкреминируется на 1 при каждом заходе
+
+> sadd ip_statistics:'127.0.0.1':'1982-03-25'
+> sadd ip_statistics:'127.0.0.1':'1992-03-25'
+> sadd ip_statistics:'127.0.0.1':'2022-03-25'
+> scard ip_statistics:'127.0.0.1'
+	(integer) 3
+	
+	
+При помощи базы данных Redis решите задачу
+поиска имени пользователя по электронному адресу и наоборот,
+поиск электронного адреса пользователя по его имени.
+
+{
+	users: {
+		'username1': {
+			'first_name': 'John',
+			'last_name': 'Travolta',
+			'email': 'briolin@yahoo.com'
+		}
+	}
+}
+
+hgetall 'first_name:John'
+hgetall 'email:briolin@yahoo.com'
+
+
+Организуйте хранение категорий и товарных позиций учебной базы данных shop в СУБД MongoDB.
+
+category = {'name': 'Category 1'}
+db.categories.insert(category)
+
+product = ({"name": "Product1", "price": 25, 'category': new DBRef('categories', category._id)})
+db.products.insert(product)
+
+
+>>>>>>> branch 'master' of https://github.com/Haikson/geekbdb.git
