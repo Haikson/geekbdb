@@ -1,4 +1,22 @@
 /*
+ * Таблица пользователей
+ */
+DROP TABLE IF EXISTS users;
+CREATE TABLE users (
+    id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT, 
+    first_name VARCHAR(100) NOT NULL, 
+    last_name VARCHAR(100) DEFAULT NULL, 
+    birthday DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    email VARCHAR(150) DEFAULT NULL, 
+    last_login TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
+    UNIQUE KEY id (id), 
+    UNIQUE KEY name (first_name, last_name),
+    UNIQUE KEY email (email)
+);
+
+/*
  * Справочник жанров
  */
 DROP TABLE IF EXISTS genres;
@@ -30,7 +48,8 @@ CREATE TABLE regions (
 DROP TABLE IF EXISTS age_ratings;
 CREATE TABLE age_ratings (
     id INT(5) UNSIGNED NOT NULL PRIMARY KEY, 
-    name VARCHAR(100) NOT NULL
+    name VARCHAR(100) NOT NULL,
+    UNIQUE KEY name (name)
 );
 
 /*
@@ -39,7 +58,8 @@ CREATE TABLE age_ratings (
 DROP TABLE IF EXISTS ratings;
 CREATE TABLE ratings (
     id INT(5) UNSIGNED NOT NULL PRIMARY KEY, 
-    name VARCHAR(100) NOT NULL
+    name VARCHAR(100) NOT NULL,
+    UNIQUE KEY name (name)
 );
 
 /*
@@ -47,8 +67,8 @@ CREATE TABLE ratings (
  */
 DROP TABLE IF EXISTS media_types;
 CREATE TABLE media_types (
-    id int(5) unsigned NOT NULL AUTO_INCREMENT,
-    name varchar(255) NOT NULL,
+    id INT(5) unsigned NOT NULL AUTO_INCREMENT,
+    name VARCHAR(255) NOT NULL,
     PRIMARY KEY (id),
     UNIQUE KEY name (name)
 );
@@ -125,19 +145,19 @@ CREATE TABLE movie_genres(
     genre_id INT(5) UNSIGNED NOT NULL, 
     PRIMARY KEY (movie_id, genre_id)
 );
-ALTER TABLE movie_genres\
-	ADD CONSTRAINT movie_genres_mv_fk
-		FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE;
+ALTER TABLE movie_genres
+  ADD CONSTRAINT movie_genres_mv_fk
+    FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE;
 ALTER TABLE movie_genres 
-	ADD CONSTRAINT movie_genres_mv_gid_fk
-		FOREIGN KEY (genre_id) REFERENCES genres (id) ON DELETE CASCADE;
-	
+  ADD CONSTRAINT movie_genres_mv_gid_fk
+    FOREIGN KEY (genre_id) REFERENCES genres (id) ON DELETE CASCADE;
+  
 /*
  * Актеры и другие члены съемочной команды
  */
 DROP TABLE IF EXISTS actors;
 CREATE TABLE actors(
-	id BIGINT(20) UNSIGNED NOT NULL PRIMARY KEY,
+  id BIGINT(20) UNSIGNED NOT NULL PRIMARY KEY,
     first_name VARCHAR(100) NOT NULL, 
     last_name VARCHAR(100) DEFAULT NULL, 
     alias VARCHAR(100) DEFAULT NULL, 
@@ -181,10 +201,10 @@ CREATE TABLE movie_members (
  */
 DROP TABLE ID EXISTS actors_facts;
 CREATE TABLE actors_facts (
-	id BIGINT(20) UNSIGNED NOT NULL PRIMARY KEY, 
-	actor_id BIGINT(20) UNSIGNED NOT NULL,
-	fact_title VARCHAR(255) NOT NULL,
-	fact_content TEXT NOT NULL,
+  id BIGINT(20) UNSIGNED NOT NULL PRIMARY KEY, 
+  actor_id BIGINT(20) UNSIGNED NOT NULL,
+  fact_title VARCHAR(255) NOT NULL,
+  fact_content TEXT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
     CONSTRAINT actors_facts_actor_id_fk FOREIGN KEY (actor_id) REFERENCES actors (id) ON DELETE CASCADE
@@ -250,22 +270,6 @@ CREATE TABLE imdb_ratings (
     CONSTRAINT movie_imdb_fk FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE
 );
 
-/*
- * Таблица пользователей
- */
-DROP TABLE IF EXISTS users;
-CREATE TABLE users (
-    id BIGINT(20) UNSIGNED NOT NULL AUTO_INCREMENT, 
-    first_name VARCHAR(100) NOT NULL, 
-    last_name VARCHAR(100) DEFAULT NULL, 
-    birthday DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    email VARCHAR(150) DEFAULT NULL, 
-    last_login TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
-    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
-    UNIQUE KEY id (id), 
-    UNIQUE KEY name (first_name, last_name)
-);
 
 /*
  * Собственный рейтинг по голосам пользователей
@@ -278,10 +282,16 @@ CREATE TABLE movie_user_ratings (
     vote INT(2) NOT NULL DEFAULT 1,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
+    UNIQUE KEY unique_user_movie (user_id, movie_id),
+    KEY movie_id (movie_id),
+    KEY user_id (user_id),
     CONSTRAINT movie_user_ratings_mv_fk FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE,
     CONSTRAINT movie_user_ratings_usr_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE SET NULL
 );
 
+/*
+ * Профили пользователей
+ */
 DROP TABLE IF EXISTS profiles;
 CREATE TABLE profiles (
     user_id BIGINT(20) UNSIGNED NOT NULL,
@@ -290,11 +300,14 @@ CREATE TABLE profiles (
     photo_url VARCHAR(2000) DEFAULT NULL, -- Не разрешаем пользователям загружать свое фото ))
     region_id INT(10) UNSIGNED DEFAULT NULL,
     PRIMARY KEY (user_id),
-    KEY profile_region_id_fk (region_id),
+    KEY profile_region_idx (region_id),
     CONSTRAINT profiles_region_id_fk FOREIGN KEY (region_id) REFERENCES regions (id) ON DELETE SET NULL,
     CONSTRAINT profiles_user_id_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE
 );
 
+/*
+ * Рецензии
+ */
 DROP TABLE IF EXISTS user_reviews;
 CREATE TABLE user_reviews (
     id BIGINT(20) UNSIGNED NOT NULL,
@@ -311,6 +324,20 @@ CREATE TABLE user_reviews (
     CONSTRAINT user_reviews_movie_fk FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE
 );
 
+/*
+ * Цели комментариев
+ */
+DROP TABLE IF EXISTS comment_target_types;
+CREATE TABLE comment_target_types (
+  id INT(2) UNSIGNED NOT NULL PRIMARY KEY,
+  name VARCHAR(100) NOT NULL,
+  UNIQUE KEY name (name)
+);
+
+
+/*
+ * Комемнтарии
+ */
 DROP TABLE IF EXISTS comments;
 CREATE TABLE comments(
     id BIGINT(20) UNSIGNED NOT NULL,
@@ -318,5 +345,64 @@ CREATE TABLE comments(
     content TEXT(500) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     published TINYINT(1) NOT NULL DEFAULT 0,
-    CONSTRAINT comments_user_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE NO ACTION
+    comment_target_type_id INT(2) UNSIGNED NOT NULL,
+    CONSTRAINT comments_user_fk FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE NO ACTION,
+    CONSTRAINT comments_comment_target_type_id FOREIGN KEY (comment_target_type_id) REFERENCES comment_target_types (id) ON DELETE CASCADE
 );
+
+/*
+ * Группы пользователей
+ */
+DROP TABLE IF EXISTS auth_groups;
+CREATE TABLE auth_groups (
+  id INT(11) NOT NULL AUTO_INCREMENT,
+  name VARCHAR(150) NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY name (name)
+);
+
+/*
+ * Права на сервисе
+ */
+DROP TABLE IF EXISTS auth_permissions;
+CREATE TABLE auth_permissions (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  name VARCHAR(255) NOT NULL,
+  permissions_code VARCHAR(11) NOT NULL,
+  codename VARCHAR(100) NOT NULL,
+  PRIMARY KEY (id)
+);
+
+/*
+ * Связь группы с правами на сервисе
+ */
+DROP TABLE IF EXISTS auth_group_permissions;
+CREATE TABLE auth_group_permissions (
+  id int(11) NOT NULL AUTO_INCREMENT,
+  group_id int(11) NOT NULL,
+  permission_id int(11) NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY user_group_permissions_group_id_permission_id_uniq (group_id,permission_id),
+  KEY auth_group_permissio_permission_id_fk_auth_perm (permission_id),
+  CONSTRAINT auth_group_permissio_permission_id_fk_auth_perm FOREIGN KEY (permission_id) REFERENCES auth_permissions (id),
+  CONSTRAINT auth_group_permissions_group_id_fk_auth_group_id FOREIGN KEY (group_id) REFERENCES auth_groups (id)
+);
+
+/*
+ * Связь пользователей с группами
+ */
+DROP TABLE IF EXISTS auth_user_groups;
+CREATE TABLE auth_user_groups (
+  id BIGINT(20) NOT NULL AUTO_INCREMENT,
+  user_id BIGINT(20) UNSIGNED NOT NULL,
+  group_id INT(11) NOT NULL,
+  PRIMARY KEY (id),
+  UNIQUE KEY auth_user_groups_user_id_group_id_uniq (user_id,group_id),
+  KEY auth_user_groups_group_id_auth_group_idx (group_id)
+);
+ALTER TABLE auth_user_groups
+	ADD CONSTRAINT auth_user_groups_group_id_fk_auth_group_id
+		FOREIGN KEY (group_id) REFERENCES auth_groups (id) ON DELETE CASCADE;
+ALTER TABLE auth_user_groups
+	ADD CONSTRAINT auth_user_groups_user_id_fk_user_id
+		FOREIGN KEY (user_id) REFERENCES users (id) ON DELETE CASCADE;
