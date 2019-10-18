@@ -220,6 +220,7 @@ CREATE TABLE movie_fees (
     fee DOUBLE NOT NULL DEFAULT 0.0, 
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
+    UNIQUE KEY movie_region (movie_id, region_id),
     CONSTRAINT movie_fees_fk FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE, 
     CONSTRAINT movie_fees_region_fk FOREIGN KEY (region_id) REFERENCES regions (id) ON DELETE CASCADE
 );
@@ -235,6 +236,7 @@ CREATE TABLE movie_spectators (
     counts DOUBLE NOT NULL DEFAULT 0.0, 
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP, 
+    UNIQUE KEY movie_region (movie_id, region_id),
     CONSTRAINT movie_spectators_fk FOREIGN KEY (movie_id) REFERENCES movies (id) ON DELETE CASCADE, 
     CONSTRAINT movie_spectators_region_fk FOREIGN KEY (region_id) REFERENCES regions (id) ON DELETE CASCADE
 );
@@ -339,8 +341,9 @@ CREATE TABLE comment_target_types (
  */
 DROP TABLE IF EXISTS comments;
 CREATE TABLE comments(
-    id BIGINT(20) UNSIGNED NOT NULL,
+    id BIGINT(20) UNSIGNED NOT NULL PRIMARY KEY AUTO_INCREMENT,
     user_id BIGINT(20) UNSIGNED NOT NULL,
+    dest_id BIGINT(20) UNSIGNED NOT NULL,
     content TEXT(500) NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     published TINYINT(1) NOT NULL DEFAULT 0,

@@ -1,9 +1,28 @@
-SELECT count(1) FROM users;
-SELECT count(1) FROM genres as g;
-SELECT count(1) FROM regions as r;
-SELECT count(1) FROM profiles as p;
-
-SELECT COUNT(1) FROM actors as a;
-SELECT COUNT(1) FROM actors_facts as af;
-SELECT COUNT(1) FROM age_ratings as ar;
-
+SELECT COUNT(1) FROM actors;
+SELECT COUNT(1) FROM actors_facts;
+SELECT COUNT(1) FROM age_ratings;
+SELECT COUNT(1) FROM auth_group_permissions;
+SELECT COUNT(1) FROM auth_groups;
+SELECT COUNT(1) FROM auth_permissions;
+SELECT COUNT(1) FROM auth_user_groups;
+SELECT COUNT(1) FROM comment_target_types;
+SELECT COUNT(1) FROM comments;
+SELECT COUNT(1) FROM genres;
+SELECT COUNT(1) FROM imdb_ratings;
+SELECT COUNT(1) FROM media;
+SELECT COUNT(1) FROM media_types;
+SELECT COUNT(1) FROM movie_fees;
+SELECT COUNT(1) FROM movie_genres;
+SELECT COUNT(1) FROM movie_medias;
+SELECT COUNT(1) FROM movie_members;
+SELECT COUNT(1) FROM movie_members_types;
+SELECT COUNT(1) FROM movie_premiere;
+SELECT COUNT(1) FROM movie_regions;
+SELECT COUNT(1) FROM movie_spectators;
+SELECT COUNT(1) FROM movie_user_ratings;
+SELECT COUNT(1) FROM movies;
+SELECT COUNT(1) FROM profiles;
+SELECT COUNT(1) FROM ratings;
+SELECT COUNT(1) FROM regions;
+SELECT COUNT(1) FROM user_reviews;
+SELECT COUNT(1) FROM users;
